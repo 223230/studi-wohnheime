@@ -6,22 +6,14 @@
       class="h-screen w-screen flex flex-col-reverse sm:flex-row"
     >
       <div
-        class="w-full h-1/2 sm:h-screen sm:w-[320px] xl:w-[480px] 2xl:w-[512px] shrink-0 bg-gray-100 flex flex-col shadow-2xl border-r z-[10000]"
+        class="w-full h-1/2 sm:h-screen sm:w-[384px] 2xl:w-[512px] shrink-0 bg-gray-100 flex flex-col shadow-2xl border-r z-[10000]"
       >
         <h1
-          class="text-2xl sm:text-4xl font-bold tracking-tighter p-4 bg-gray-50 z-[10000] dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600"
+          class="text-2xl sm:text-4xl font-bold tracking-tighter px-4 py-2 sm:py-4 bg-gray-50 z-[10000] dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600"
         >
           Studi-Wohnheime
         </h1>
-        <div class="overflow-scroll">
-          <Result
-            v-for="w in wohnheime"
-            :key="w.id"
-            :address="w.address"
-            :housing="w.housing"
-            :web_link="w.web_link"
-          ></Result>
-        </div>
+        <ResultList ref="results" :results="wohnheime" :selected_id="selected_id" />
       </div>
       <LMap
         ref="map"
@@ -34,24 +26,25 @@
           :key="w.id"
           :lat-lng="w.coordinates"
           :radius="50"
+          @click="select_marker(w.id)"
         >
           <LTooltip
-            direction="top"
-            class="p-4"
+            :options="{direction: 'top'}"
+            class="md:p-4"
           >
-            <p class="text-base font-bold">
+            <p class="text-base font-bold max-md:hidden mb-2">
               {{w.address}}
             </p>
-            <ul class="text-sm space-y-2 mt-2">
+            <ul class="text-xs md:text-sm md:space-y-2">
               <li
                 v-for="h in w.housing"
-                class="grid grid-cols-[20px_280px_92px] gap-2"
+                class="flex lg:grid grid-cols-[20px_280px_92px] gap-2"
               >
                 <HousingIcon :type="h.type" />
-                <span class="opacity-75">
+                <span class="opacity-75 max:sm:hidden">
                   {{ h.type }}
                 </span>
-                <span class="text-right opacity-50">
+                <span class="text-right opacity-50 max-md:hidden">
                   {{ h.waiting_period }} Monate
                 </span>
               </li>
@@ -81,6 +74,13 @@
 </style>
 
 <script setup>
+  let selected_id = ref(-1);
+  const results = ref(null);
+
+  function select_marker(id) {
+    console.log(results)
+    results.value.expand(id, true, true);
+  }
   const wohnheime = [
   {
     "id": 0,

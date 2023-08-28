@@ -1,0 +1,37 @@
+<template>
+    <div class="overflow-scroll">
+        <Result
+          v-for="w in results"
+          :key="w.id"
+          :id="'w-'+w.id"
+          :address="w.address"
+          :housing="w.housing"
+          :web_link="w.web_link"
+          :expanded="w.id == selected_id"
+          @expand="(e) => expand(w.id, e)"
+        ></Result>
+    </div>
+</template>
+
+<script setup>
+let selected_id = ref(-1);
+
+const props = defineProps([
+    "results"
+]);
+
+function expand(id, e, scrollIntoView=false) {
+    if(e) {
+        selected_id.value = id;
+        if(scrollIntoView) setTimeout(() => {
+            document.getElementById('w-'+id).scrollIntoView({block: "center"});
+        }, 120);
+    }
+    else
+        selected_id.value = -1;
+}
+
+defineExpose({
+    expand
+})
+</script>
