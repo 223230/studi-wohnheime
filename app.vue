@@ -1,87 +1,117 @@
 <template>
-  <main
-    class="h-screen w-screen text-gray-800 dark:text-zinc-100"
-  >
-    <div
-      class="h-screen w-screen flex flex-col-reverse sm:flex-row"
-    >
+  <main class="h-screen w-screen text-gray-800 dark:text-zinc-100">
+    <div class="h-screen w-screen flex flex-col-reverse lg:flex-row">
       <div
-        class="w-full h-1/2 sm:h-screen sm:w-[384px] 2xl:w-[512px] shrink-0 bg-gray-100 flex flex-col shadow-2xl border-r z-[10000]"
-      >
+        class="w-full h-1/2 lg:h-screen lg:w-[384px] 2xl:w-[512px] shrink-0 flex flex-col bg-gray-100 dark:bg-zinc-900 shadow-2xl dark:shadow-black border-gray-200 dark:border-zinc-600 border-r z-[20000]"
+        :class="slide_over_visible ? 'max-lg:hidden' : ''">
         <h1
-          class="text-2xl sm:text-4xl font-bold tracking-tighter px-4 py-2 sm:py-4 bg-gray-50 z-[10000] dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600"
-        >
+          class="text-2xl sm:text-4xl font-bold tracking-tighter px-4 py-2 sm:py-4 bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600">
           Studi-Wohnheime
         </h1>
-        <ResultList ref="results" :results="wohnheime" :selected_id="selected_id" />
+        <ResultList ref="results" :results="wohnheime" :selected_id="selected_id"
+          @openSlideOver="(id) => openSlideOver(id)" />
       </div>
-      <LMap
-        ref="map"
-        :zoom="14"
-        :center="[51.546,9.942]"
-        :options="{zoomControl: false}"
-      >
-        <LMarker
-          v-for="w in wohnheime"
-          :key="w.id"
-          :lat-lng="w.coordinates"
-          :radius="50"
-          @click="select_marker(w.id)"
-        >
-          <LTooltip
-            :options="{direction: 'top'}"
-            class="md:p-4"
-          >
-            <p class="text-base font-bold max-md:hidden mb-2">
-              {{w.address}}
-            </p>
-            <ul class="text-xs md:text-sm md:space-y-2">
-              <li
-                v-for="h in w.housing"
-                class="flex lg:grid grid-cols-[20px_280px_92px] gap-2"
-              >
-                <HousingIcon :type="h.type" />
-                <span class="opacity-75 max:sm:hidden">
-                  {{ h.type }}
-                </span>
-                <span class="text-right opacity-50 max-md:hidden">
-                  {{ h.waiting_period }} Monate
-                </span>
-              </li>
-            </ul>
-          </LTooltip>
-        </LMarker>
-        <LTileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
-          layer-type="base"
-          name="OpenStreetMap"
-        />
-      </LMap>
+      <div class="flex-1 relative">
+        <Transition>
+          <SlideOverInfo :title="wohnheime[slide_over_selected_id].address" short_description="" :images="['', '']"
+            :web_link="wohnheime[slide_over_selected_id].web_link"
+            :housing_types="wohnheime[slide_over_selected_id].housing" v-if="slide_over_visible"
+            @collapse="slide_over_visible = false" />
+        </Transition>
+        <div class="w-full h-full">
+          <LMap ref="map" :zoom="14" :center="[51.546, 9.942]" :options="{ zoomControl: false }">
+            <LMarker v-for="w in wohnheime" :key="w.id" :lat-lng="w.coordinates" :radius="50"
+              @click="select_marker(w.id)">
+              <LTooltip :options="{ direction: 'top' }" class="md:p-4 dark:text-white">
+                <p class="text-base font-bold max-md:hidden mb-2">
+                  {{ w.address }}
+                </p>
+                <ul class="text-xs md:text-sm md:space-y-2">
+                  <li v-for="h in w.housing" class="flex lg:grid grid-cols-[20px_280px_92px] gap-2">
+                    <HousingIcon :type="h.type" />
+                    <span class="opacity-75 max:sm:hidden">
+                      {{ h.type }}
+                    </span>
+                    <span class="text-right opacity-50 max-md:hidden">
+                      {{ h.waiting_period }} Monate
+                    </span>
+                  </li>
+                </ul>
+              </LTooltip>
+            </LMarker>
+            <LTileLayer
+              :url="'https://tiles.stadiamaps.com/tiles/alidade_smooth' + (dark_mode ? '_dark' : '') + '/{z}/{x}/{y}.png'"
+              attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
+              layer-type="base" name="OpenStreetMap" />
+          </LMap>
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 
 <style>
+.leaflet-tooltip {
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, .75);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  backdrop-filter: blur(8px);
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
   .leaflet-tooltip {
-    border-radius: 0.375rem;
-    background-color: rgba(255,255,255, .75);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    backdrop-filter: blur(8px);
-    opacity: 1;
+    background-color: rgba(0, 0, 0, .75);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.25),
+      0 2px 4px -2px rgb(0 0 0 / 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
+}
+
+.v-enter-active {
+  transition: transform 300ms ease-in, opacity 300ms ease;
+}
+
+.v-leave-active {
+  transition: transform 300ms ease-out, opacity 300ms ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
 </style>
 
 <script setup>
-  let selected_id = ref(-1);
-  const results = ref(null);
+let selected_id = ref(-1);
+let dark_mode = ref(false);
+const results = ref(null);
+let slide_over_visible = ref(true);
+let slide_over_selected_id = ref(-1);
 
-  function select_marker(id) {
-    console.log(results)
-    results.value.expand(id, true, true);
-  }
-  const wohnheime = [
+function select_marker(id) {
+  console.log(results)
+  results.value.expand(id, true, true);
+}
+
+function openSlideOver(id) {
+  slide_over_visible.value = true;
+  slide_over_selected_id.value = id;
+  console.log(id);
+}
+
+onMounted(() => {
+  dark_mode.value = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    dark_mode.value = event.matches;
+    console.log(dark_mode)
+  });
+});
+
+const wohnheime = [
   {
     "id": 0,
     "address": "Albrecht-Thaer-Weg 10-14b",
@@ -759,5 +789,5 @@
     ],
     "web_link": "https://www.studentenwerk-goettingen.de/studentisches-wohnen/unsere-wohnheime/zimmermannstrasse-14/16-am-papenberg"
   }
-]
+];
 </script>
