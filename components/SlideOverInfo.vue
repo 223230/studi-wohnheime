@@ -39,7 +39,7 @@
                 <p class="text-gray-500 dark:text-zinc-400 mb-4">Wähl eine der Wohnformen aus, um mehr Infos zu ihr zu
                     erhalten.
                 </p>
-                <HousingTypes :housing_types="housing_types"></HousingTypes>
+                <HousingTypes :housing_types="housing_types" :key="title"></HousingTypes>
                 <div class="grid grid-cols-2 gap-4" v-if="facilities[0].trim() != '' || parking_spots[0].trim() != ''">
                     <div v-if="facilities[0].trim() != ''">
                         <h2 class="text-2xl font-bold mt-12 mb-4">Ausstattung</h2>
