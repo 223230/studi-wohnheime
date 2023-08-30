@@ -20,13 +20,14 @@
             :housing_types="wohnheime[slide_over_selected_id].metadata.housing_types"
             :facilities="wohnheime[slide_over_selected_id].metadata.facilities"
             :parking_spots="wohnheime[slide_over_selected_id].metadata.parking_spots" v-if="slide_over_selected_id != -1"
-            @collapse="slide_over_selected_id = -1" />
+            @collapse="slide_over_selected_id = -1" v-key="slide_over_selected_id" />
         </Transition>
         <div class="w-full h-full">
           <LMap ref="map" :zoom="14" :center="[51.546, 9.942]" :options="{ zoomControl: false }">
             <LMarker v-for="w in  wohnheime " :key="w.id" :lat-lng="w.coordinates" :radius="50"
               @click="select_marker(w.id)">
-              <LIcon :icon-url="w.id == selected_id ? '/pin_s.svg' : '/pin.svg'" :icon-anchor="[14, 0]"></LIcon>
+              <LIcon :icon-url="w.id == selected_id ? '/pin_s.svg' : (dark_mode ? '/pin_dark.svg' : '/pin.svg')"
+                :icon-anchor="[14, 0]"></LIcon>
               <LTooltip :options="{ direction: 'top' }" class="md:p-4 dark:text-white">
                 <p class="text-base font-bold max-md:hidden mb-2">
                   {{ w.address }}

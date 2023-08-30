@@ -5,8 +5,7 @@
         bg-gray-200         border-white            shadow-black/50
         dark:bg-zinc-900    dark:border-zinc-600    dark:shadow-black
         lg:border-r
-        lg:backdrop-blur-2xl shadow-2xl
-        absolute top-0 left-0 z-[10000] overflow-hidden">
+        shadow-2xl absolute top-0 left-0 z-[10000] overflow-hidden">
         <div class="
             absolute top-0 left-0 w-full border-b
             backdrop-blur-xl backdrop-saturate-200
@@ -24,22 +23,22 @@
         </div>
         <div class="h-full overflow-auto">
             <img :src="`https://studentenwerk-goettingen.de${images[0]}`" class="aspect-video w-full object-cover mt-14">
-            <div class="mx-auto my-8 max-w-xl w-[calc(100%_-_2rem)]">
-                <p class="sm:text-lg mb-4 text-justify">{{ short_description }}</p>
-                <div class="flex flex-wrap gap-2">
-                    <Button href="https://ipack.studentenwerk-goettingen.de/wohnheimaufnahmeantrag.html" target="_blank"
-                        :primary="true" class="flex gap-1">
-                        <Icon name="fluent:form-24-regular" size="24px" /> Bewerben
-                    </Button>
-                    <Button :href="web_link" target="_blank" class="flex gap-1">
-                        <Icon name="fluent:link-24-regular" size="24px" /> Original anzeigen
-                    </Button>
+            <div class="mx-auto mt-8 max-w-xl w-[calc(100%_-_2rem)]">
+                <p class="sm:text-lg text-justify text-gray-500 dark:text-zinc-400">{{ short_description }}</p>
+                <h2 class="text-2xl font-bold mt-12 mb-4" v-if="images.length > 1">Bilder</h2>
+                <div class="flex w-full gap-4" v-if="images.length > 1">
+                    <img v-for="url in images" :key="url" :src="`https://studentenwerk-goettingen.de${url}`"
+                        class="aspect-video w-0 flex-1 rounded object-cover">
                 </div>
-                <h2 class="text-2xl font-bold mt-12 mb-4">Wohnformen</h2>
-                <p class="text-gray-500 dark:text-zinc-400 mb-4">Wähl eine der Wohnformen aus, um mehr Infos zu ihr zu
-                    erhalten.
-                </p>
-                <HousingTypes :housing_types="housing_types" :key="title"></HousingTypes>
+                <div v-if="housing_types.length > 1">
+                    <h2 class="text-2xl font-bold mt-12 mb-4">Wohnformen</h2>
+                    <p class="text-gray-500 dark:text-zinc-400 mb-4">Wähl eine der Wohnformen
+                        aus, um mehr Infos zu ihr zu
+                        erhalten.
+                    </p>
+                    <HousingTypes :housing_types="housing_types" :key="title"></HousingTypes>
+                </div>
+                <HousingDetails v-else :housing_type="housing_types[0]" class="mt-14"></HousingDetails>
                 <div class="grid grid-cols-2 gap-4" v-if="facilities[0].trim() != '' || parking_spots[0].trim() != ''">
                     <div v-if="facilities[0].trim() != ''">
                         <h2 class="text-2xl font-bold mt-12 mb-4">Ausstattung</h2>
@@ -54,10 +53,14 @@
                         </ul>
                     </div>
                 </div>
-                <h2 class="text-2xl font-bold mt-12 mb-4" v-if="images.length > 1">Bilder</h2>
-                <div class="flex w-full gap-4" v-if="images.length > 1">
-                    <img v-for="url in images" :key="url" :src="`https://studentenwerk-goettingen.de${url}`"
-                        class="aspect-video w-0 flex-1 rounded object-cover">
+                <div class="flex flex-wrap gap-2 my-14">
+                    <Button href="https://ipack.studentenwerk-goettingen.de/wohnheimaufnahmeantrag.html" target="_blank"
+                        :primary="true">
+                        <Icon name="fluent:form-24-regular" size="24px" /> Bewerben
+                    </Button>
+                    <Button :href="web_link" target="_blank">
+                        <Icon name="fluent:link-24-regular" size="24px" /> Original anzeigen
+                    </Button>
                 </div>
             </div>
         </div>
