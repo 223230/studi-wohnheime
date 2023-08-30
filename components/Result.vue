@@ -19,9 +19,6 @@
                     </div>
                 </div>
             </div>
-            <Icon name="fluent:chevron-down-24-filled" size="24px" class="transition-transform shrink-0" :class="expanded ?
-                'rotate-180 text-gray-800 dark:text-zinc-300' :
-                'text-gray-500 dark:text-zinc-500'"></Icon>
         </div>
         <ul class="space-y-2 px-4" :class="expanded ?
             '' :
@@ -36,12 +33,12 @@
                 </span>
             </li>
         </ul>
-        <div class="mt-4 mb-2 mx-4" :class="expanded ? '' : 'hidden'">
+        <!-- <div class="mt-4 mb-2 mx-4" :class="expanded ? '' : 'hidden'">
             <Button @click="$emit('openSlideOver')" target="_blank" class="flex items-center w-fit">
                 Mehr ansehen
                 <Icon name="fluent:chevron-right-20-filled" size="20px" />
             </Button>
-        </div>
+        </div> -->
     </div>
 </template>
 

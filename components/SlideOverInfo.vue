@@ -23,9 +23,9 @@
             </div>
         </div>
         <div class="h-full overflow-auto">
-            <img :src="images[0]" class="aspect-video w-full object-cover mt-14">
+            <img :src="`https://studentenwerk-goettingen.de${images[0]}`" class="aspect-video w-full object-cover mt-14">
             <div class="mx-auto my-8 max-w-xl w-[calc(100%_-_2rem)]">
-                <p class="sm:text-lg mb-4">{{ short_description }}</p>
+                <p class="sm:text-lg mb-4 text-justify">{{ short_description }}</p>
                 <div class="flex flex-wrap gap-2">
                     <Button href="https://ipack.studentenwerk-goettingen.de/wohnheimaufnahmeantrag.html" target="_blank"
                         :primary="true" class="flex gap-1">
@@ -36,24 +36,28 @@
                     </Button>
                 </div>
                 <h2 class="text-2xl font-bold mt-12 mb-4">Wohnformen</h2>
-                <div class="grid sm:grid-cols-2 gap-2 lg:gap-4">
-                    <div v-for="h in housing_types"
-                        class="bg-gray-100 dark:bg-zinc-800 p-4 sm:p-8 flex flex-col gap-4 items-center justify-between rounded-xl relative overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all hover:shadow-gray-300 hover:dark:shadow-zinc-950/50 hover:z-10">
-                        <HousingIcon size="4rem" :type="h.type" class="z-10" />
-                        <HousingIcon size="4rem" :type="h.type"
-                            class="absolute blur-3xl saturate-200 z-0 scale-[200%] opacity-10 group-hover:opacity-25 dark:opacity-50 dark:group-hover:opacity-75 group-hover:scale-[250%] transition" />
-                        <div class="text-center text-lg font-medium z-10">{{ h.type }}</div>
-                        <div class="text-center text-sm text-gray-500 dark:text-zinc-400 z-10">{{ h.size }} m²<br>{{
-                            h.waiting_period }} Monate Wartezeit</div>
+                <p class="text-gray-500 dark:text-zinc-400 mb-4">Wähl eine der Wohnformen aus, um mehr Infos zu ihr zu
+                    erhalten.
+                </p>
+                <HousingTypes :housing_types="housing_types"></HousingTypes>
+                <div class="grid grid-cols-2 gap-4" v-if="facilities[0].trim() != '' || parking_spots[0].trim() != ''">
+                    <div v-if="facilities[0].trim() != ''">
+                        <h2 class="text-2xl font-bold mt-12 mb-4">Ausstattung</h2>
+                        <ul class="text-gray-500 dark:text-zinc-400 list-disc ml-4">
+                            <li v-for="f in facilities">{{ f }}</li>
+                        </ul>
+                    </div>
+                    <div v-if="parking_spots[0].trim() != ''">
+                        <h2 class="text-2xl font-bold mt-12 mb-4">Parkmöglichkeiten</h2>
+                        <ul class="text-gray-500 dark:text-zinc-400 list-disc pl-4">
+                            <li v-for="p in parking_spots">{{ p }}</li>
+                        </ul>
                     </div>
                 </div>
-                <h2 class="text-2xl font-bold mt-12 mb-4">Ausstattung</h2>
-                <p class="text-gray-500 dark:text-zinc-400"></p>
-                <h2 class="text-2xl font-bold mt-12 mb-4">Parkmöglichkeiten</h2>
-                <p class="text-gray-500 dark:text-zinc-400">{{ short_description }}</p>
                 <h2 class="text-2xl font-bold mt-12 mb-4" v-if="images.length > 1">Bilder</h2>
-                <div class="flex w-full gap-4">
-                    <img v-for="url in images" :key="url" :src="url" class="aspect-video w-0 flex-1 rounded object-cover">
+                <div class="flex w-full gap-4" v-if="images.length > 1">
+                    <img v-for="url in images" :key="url" :src="`https://studentenwerk-goettingen.de${url}`"
+                        class="aspect-video w-0 flex-1 rounded object-cover">
                 </div>
             </div>
         </div>
@@ -66,6 +70,8 @@ defineProps([
     "short_description",
     "images",
     "web_link",
-    "housing_types"
+    "housing_types",
+    "facilities",
+    "parking_spots"
 ]);
 </script>
