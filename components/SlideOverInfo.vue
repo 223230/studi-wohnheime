@@ -1,6 +1,6 @@
 <template>
     <div class="
-        w-full  lg:max-w-2xl
+        w-full  lg:max-w-xl
         h-full  lg:h-full
         bg-gray-200         border-white            shadow-black/50
         dark:bg-zinc-900    dark:border-zinc-600    dark:shadow-black
@@ -21,10 +21,22 @@
                 <div class="font-bold grow leading-tight sm:text-xl">{{ title }}</div>
             </div>
         </div>
-        <div class="h-full overflow-auto">
+        <div class="h-full overflow-auto overscroll-none">
             <img :src="`https://studentenwerk-goettingen.de${images[0]}`" class="aspect-video w-full object-cover mt-14">
-            <div class="mx-auto mt-8 max-w-xl w-[calc(100%_-_2rem)]">
-                <p class="sm:text-lg text-justify text-gray-500 dark:text-zinc-400">{{ short_description }}</p>
+            <div class="mx-auto mt-8 mb-12 max-w-xl w-[calc(100%_-_4rem)]">
+                <p class="text-justify text-gray-500 dark:text-zinc-400">{{ short_description }}</p>
+                <div class="flex flex-wrap gap-2 my-8">
+                    <Button href="https://ipack.studentenwerk-goettingen.de/wohnheimaufnahmeantrag.html" target="_blank"
+                        :primary="true">
+                        <Icon name="fluent:form-24-regular" size="24px" /> Bewerben
+                    </Button>
+                    <Button :href="web_link" target="_blank">
+                        <Icon name="fluent:link-24-regular" size="24px" /> Original anzeigen
+                    </Button>
+                    <Button :href="`https://google.com/maps/place/${coords}`" target="_blank">
+                        <Icon name="fluent:location-24-regular" size="24px" /> In Google Maps anzeigen
+                    </Button>
+                </div>
                 <h2 class="text-2xl font-bold mt-12 mb-4" v-if="images.length > 1">Bilder</h2>
                 <div class="flex w-full gap-4" v-if="images.length > 1">
                     <img v-for="url in images" :key="url" :src="`https://studentenwerk-goettingen.de${url}`"
@@ -53,15 +65,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2 my-14">
-                    <Button href="https://ipack.studentenwerk-goettingen.de/wohnheimaufnahmeantrag.html" target="_blank"
-                        :primary="true">
-                        <Icon name="fluent:form-24-regular" size="24px" /> Bewerben
-                    </Button>
-                    <Button :href="web_link" target="_blank">
-                        <Icon name="fluent:link-24-regular" size="24px" /> Original anzeigen
-                    </Button>
-                </div>
             </div>
         </div>
     </div>
@@ -75,6 +78,7 @@ defineProps([
     "web_link",
     "housing_types",
     "facilities",
-    "parking_spots"
+    "parking_spots",
+    "coords"
 ]);
 </script>

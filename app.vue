@@ -2,7 +2,7 @@
   <main class="h-screen w-screen text-gray-800 dark:text-zinc-100">
     <div class="h-screen w-screen flex flex-col-reverse lg:flex-row">
       <div
-        class="w-full h-1/2 lg:h-screen lg:w-[384px] 2xl:w-[384px] shrink-0 flex flex-col bg-gray-100 dark:bg-zinc-900 shadow-2xl dark:shadow-black border-gray-200 dark:border-zinc-600 border-r z-[20000]"
+        class="w-full h-1/2 lg:h-screen lg:w-[320px] 2xl:w-[384px] shrink-0 flex flex-col bg-gray-100 dark:bg-zinc-900 shadow-2xl dark:shadow-black border-gray-200 dark:border-zinc-600 border-r z-[20000]"
         :class="slide_over_selected_id != -1 ? 'max-lg:hidden' : ''">
         <h1
           class="text-2xl sm:text-4xl font-bold tracking-tighter px-4 py-2 sm:py-4 bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600">
@@ -20,6 +20,7 @@
             :housing_types="wohnheime[slide_over_selected_id].metadata.housing_types"
             :facilities="wohnheime[slide_over_selected_id].metadata.facilities"
             :parking_spots="wohnheime[slide_over_selected_id].metadata.parking_spots"
+            :coords="wohnheime[slide_over_selected_id].coordinates"
             v-if="slide_over_selected_id != -1"
             @collapse="slide_over_selected_id = -1" v-key="slide_over_selected_id" />
         </Transition>
