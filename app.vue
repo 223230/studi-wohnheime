@@ -40,7 +40,7 @@
             </div>
           </Filter>
         </div>
-        <ResultList ref="results" :results="wohnheime" :selected_id="selected_id"
+        <ResultList ref="results" :results="wohnheime.filter(w=> !isFiltered(w))" :selected_id="selected_id"
           @openSlideOver="(id) => openSlideOver(id)" @closeSlideOver="slide_over_selected_id = -1" />
       </div>
       <div class="flex-1 relative">
