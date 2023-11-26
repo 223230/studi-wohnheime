@@ -8,6 +8,38 @@
           class="text-2xl sm:text-4xl font-bold tracking-tighter px-4 py-2 sm:py-4 bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-zinc-50 border-b border-gray-200 dark:border-zinc-600">
           Studi-Wohnheime
         </h1>
+        <div class="flex w-full overflow-x-auto overflow-y-hidden h-20 pl-4 items-center gap-2 border-b border-gray-200 dark:border-zinc-600">
+          <Filter filterName="Wohnform" type="options" :active="Object.values(filters.form).some(val => val)">
+            <div class="flex gap-2 items-center hover:bg-gray-200 dark:hover:bg-zinc-700 px-2 py-1 mx-2 mb-0.5 rounded"
+              :class="filters.form.einzelappartment ? 'bg-gray-300 dark:bg-zinc-600' : ''"
+              @click="filters.form.einzelappartment = !filters.form.einzelappartment"
+            >
+              <Icon name="fluent:person-20-filled" size="20px" class="text-indigo-500 dark:text-indigo-300"/>
+              <div>Einzelappartment</div>
+            </div>
+            <div class="flex gap-2 items-center hover:bg-gray-200 dark:hover:bg-zinc-700 px-2 py-1 mx-2 mb-0.5 rounded"
+              :class="filters.form.doppelappartement ? 'bg-gray-300 dark:bg-zinc-600' : ''"
+              @click="filters.form.doppelappartement = !filters.form.doppelappartement"
+            >
+              <Icon name="fluent:people-20-filled" size="20px" class="text-rose-500 dark:text-rose-300" />
+              <div>Doppelappartement</div>
+            </div>
+            <div class="flex gap-2 items-center hover:bg-gray-200 dark:hover:bg-zinc-700 px-2 py-1 mx-2 mb-0.5 rounded"
+              :class="filters.form.gruppenwohnung ? 'bg-gray-300 dark:bg-zinc-600' : ''"
+              @click="filters.form.gruppenwohnung = !filters.form.gruppenwohnung"
+            >
+              <Icon name="fluent:people-community-20-filled" size="20px" class="text-teal-500 dark:text-teal-300"/>
+              <div>Gruppenwohnung</div>
+            </div>
+            <div class="flex gap-2 items-center hover:bg-gray-200 dark:hover:bg-zinc-700 px-2 py-1 mx-2 mb-2 rounded"
+              :class="filters.form.familie ? 'bg-gray-300 dark:bg-zinc-600' : ''"
+              @click="filters.form.familie = !filters.form.familie"
+            >
+              <Icon name="fluent:people-community-20-filled" size="20px" class="text-yellow-500 dark:text-yellow-300"/>
+              <div>Familie mit Kind</div>
+            </div>
+          </Filter>
+        </div>
         <ResultList ref="results" :results="wohnheime" :selected_id="selected_id"
           @openSlideOver="(id) => openSlideOver(id)" @closeSlideOver="slide_over_selected_id = -1" />
       </div>
@@ -35,7 +67,7 @@
                   {{ w.address }}
                 </p>
                 <ul class="text-xs md:text-sm md:space-y-2">
-                  <li v-for=" h  in  w.housing " class="flex lg:grid grid-cols-[20px_280px_92px] gap-2">
+                  <li v-for="h in w.housing" class="flex lg:grid grid-cols-[20px_280px_92px] gap-2">
                     <HousingIcon :type="h.type" />
                     <span class="opacity-75 max:sm:hidden">
                       {{ h.type }}
@@ -102,6 +134,15 @@
 </style>
 
 <script setup>
+let filters = ref({
+  "form": {
+    einzelappartment: false,
+    doppelappartement: false,
+    gruppenwohnung: false,
+    familie: false,
+  },
+});
+
 let selected_id = ref(-1);
 let dark_mode = ref(false);
 const results = ref(null);
