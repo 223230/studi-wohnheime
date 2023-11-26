@@ -60,7 +60,14 @@
           <LMap ref="map" :zoom="14" :center="[51.546, 9.942]" :options="{ zoomControl: false }">
             <LMarker v-for="w in  wohnheime " :key="w.id" :lat-lng="w.coordinates" :radius="50"
               @click="select_marker(w.id)">
-              <LIcon :icon-url="w.id == selected_id ? '/pin_s.svg' : (dark_mode ? '/pin_dark.svg' : '/pin.svg')"
+              <LIcon
+                :icon-url="(w.id == selected_id ? '/pin_s.svg' :
+                  (
+                    isFiltered(w) ? '/pin_disabled.svg' : (
+                      dark_mode ? '/pin_dark.svg' : '/pin.svg'
+                    )
+                  )
+                )"
                 :icon-anchor="[14, 0]"></LIcon>
               <LTooltip :options="{ direction: 'top' }" class="md:p-4 dark:text-white">
                 <p class="text-base font-bold max-md:hidden mb-2">
@@ -148,6 +155,22 @@ let dark_mode = ref(false);
 const results = ref(null);
 let slide_over_selected_id = ref(-1);
 let map = ref(null)
+
+function isFiltered(w) {
+  if(Object.values(filters.value.form).some(val => val)) {
+    return (w.housing.find(h=>{
+      if(h.type == "Einzelappartements" && filters.value.form.einzelappartment)
+        return true;
+      if((h.type.match(/Einzelappartement/g) || w.housing.type == 'Doppelzimmer (für 1 Person)') && filters.value.form.doppelappartement)
+        return true;
+      if((h.type.match(/(Einzelzimmer in )?[2-9]\d*er-Gruppenwohnung(en)?/g) || w.housing.type == 'Einzelzimmer') && filters.value.form.gruppenwohnung)
+        return true;
+      if((h.type.match(/Familie/g) || w.housing.type == 'Familie mit Kind') && filters.value.form.familie)
+        return true;
+    }) == undefined);
+  }
+  return false;
+}
 
 function select_marker(id) {
   results.value.expand(id, true, true);
